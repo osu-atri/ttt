@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Editor from './components/Editor.vue'
+import Editor from './components/EditorTranscript.vue'
 
 const editor1 = ref<InstanceType<typeof Editor> | null>(null)
 const editor2 = ref<InstanceType<typeof Editor> | null>(null)
@@ -8,8 +8,8 @@ const editor2 = ref<InstanceType<typeof Editor> | null>(null)
 
 <template>
   <div class="editor-row">
-    <Editor ref="editor1" value="// original" editor-id="left" />
-    <Editor ref="editor2" value="// translated" editor-id="right" />
+    <Editor ref="editor1" value="// original" editor-id="editor-original" />
+    <Editor ref="editor2" value="// translated" editor-id="editor-translated" />
   </div>
 </template>
 
