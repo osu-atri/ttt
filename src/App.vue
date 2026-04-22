@@ -1,22 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Editor from './components/EditorTranscript.vue'
 
-const editor1 = ref<InstanceType<typeof Editor> | null>(null)
-const editor2 = ref<InstanceType<typeof Editor> | null>(null)
+const { t } = useI18n()
+
+const editor1 = useTemplateRef('editor1')
+const editor2 = useTemplateRef('editor2')
 </script>
 
 <template>
   <v-app>
     <v-app-bar color="primary" density="compact">
-      <v-app-bar-title>project name</v-app-bar-title>
+      <v-app-bar-title>{{ t('appBar.projectName') }}</v-app-bar-title>
 
       <template v-slot:append>
         <v-tabs>
-          <v-tab>test</v-tab>
-          <v-tab>test</v-tab>
-          <v-tab>test</v-tab>
-          <v-tab>test</v-tab>
+          <v-tab>{{ t('tabs.test') }}</v-tab>
+          <v-tab>{{ t('tabs.test') }}</v-tab>
+          <v-tab>{{ t('tabs.test') }}</v-tab>
+          <v-tab>{{ t('tabs.test') }}</v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
