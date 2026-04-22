@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Editor from './components/EditorTranscript.vue'
+import TranslateView from './ViewTranslate.vue'
 
 const { t } = useI18n()
-
-const editor1 = useTemplateRef('editor1')
-const editor2 = useTemplateRef('editor2')
+const tab = ref(0)
 </script>
 
 <template>
@@ -15,7 +13,7 @@ const editor2 = useTemplateRef('editor2')
       <v-app-bar-title>{{ t('appBar.projectName') }}</v-app-bar-title>
 
       <template v-slot:append>
-        <v-tabs>
+        <v-tabs v-model="tab">
           <v-tab>{{ t('tabs.test') }}</v-tab>
           <v-tab>{{ t('tabs.test') }}</v-tab>
           <v-tab>{{ t('tabs.test') }}</v-tab>
@@ -24,10 +22,7 @@ const editor2 = useTemplateRef('editor2')
       </template>
     </v-app-bar>
     <v-main>
-      <div class="editor-row">
-        <Editor ref="editor1" value="// original" editor-id="editor-original" />
-        <Editor ref="editor2" value="// translated" editor-id="editor-translated" />
-      </div>
+      <TranslateView v-if="tab === 0" />
     </v-main>
   </v-app>
 </template>

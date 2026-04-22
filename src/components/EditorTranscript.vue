@@ -14,8 +14,8 @@ const props = withDefaults(
   },
 )
 
-const container = useTemplateRef<HTMLDivElement>('editorContainer')
-let editor: monaco.editor.IStandaloneCodeEditor | null = null
+const container = useTemplateRef('container')
+let editor: monaco.editor.IStandaloneCodeEditor
 
 onMounted(() => {
   if (container.value) {
@@ -33,7 +33,7 @@ onMounted(() => {
     }
 
     editor.onDidChangeModelContent(() => {
-      const lineCount = editor?.getModel()?.getLineCount() ?? 1
+      const lineCount = editor.getModel()?.getLineCount() ?? 1
       useEditorStore().setLineCount(lineCount)
     })
 
@@ -47,7 +47,7 @@ onMounted(() => {
 watch(
   () => useEditorStore().lineCount,
   (newCount) => {
-    const model = editor?.getModel()
+    const model = editor.getModel()
     if (!model) return
 
     const currentCount = model.getLineCount()
@@ -71,7 +71,7 @@ defineExpose({ editor })
 </script>
 
 <template>
-  <div ref="editorContainer"></div>
+  <div ref="container"></div>
 </template>
 
 <style scoped>
