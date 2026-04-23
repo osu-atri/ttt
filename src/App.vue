@@ -14,10 +14,10 @@ const tab = ref(0)
 
       <template v-slot:append>
         <v-tabs v-model="tab">
-          <v-tab>{{ t('tabs.test') }}</v-tab>
-          <v-tab>{{ t('tabs.test') }}</v-tab>
-          <v-tab>{{ t('tabs.test') }}</v-tab>
-          <v-tab>{{ t('tabs.test') }}</v-tab>
+          <v-tab>{{ t('appBar.tabs.translate') }}</v-tab>
+          <v-tab>{{ t('appBar.tabs.timeline') }}</v-tab>
+          <v-tab>{{ t('appBar.tabs.effect') }}</v-tab>
+          <v-tab>{{ t('appBar.tabs.produce') }}</v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
