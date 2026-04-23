@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted, useTemplateRef, watch } from 'vue'
+import { onMounted, useTemplateRef } from 'vue'
 import * as monaco from 'monaco-editor'
-import { useEditorStore } from '@/stores/editor'
 
 const props = withDefaults(
   defineProps<{
@@ -13,6 +12,10 @@ const props = withDefaults(
     options: undefined,
   },
 )
+
+const emit = defineEmits<{
+  (e: 'lineCountChange', count: number): void
+}>()
 
 const container = useTemplateRef('container')
 let editor: monaco.editor.IStandaloneCodeEditor
@@ -29,45 +32,58 @@ onMounted(() => {
 
     const model = editor.getModel()
     if (model) {
-      useEditorStore().setLineCount(model.getLineCount())
+      emit('lineCountChange', model.getLineCount())
     }
 
     editor.onDidChangeModelContent(() => {
       const lineCount = editor.getModel()?.getLineCount() ?? 1
-      useEditorStore().setLineCount(lineCount)
-    })
-
-    editor.onDidChangeCursorPosition((e) => {
-      const line = e.position.lineNumber
-      useEditorStore().setCursorLine(line)
+      emit('lineCountChange', lineCount)
     })
   }
 })
 
-watch(
-  () => useEditorStore().lineCount,
-  (newCount) => {
-    const model = editor.getModel()
-    if (!model) return
+function syncToLineCount(targetCount: number) {
+  if (!editor) return
+  const model = editor.getModel()
+  if (!model) return
 
-    const currentCount = model.getLineCount()
-    if (newCount === currentCount) return
+  const currentCount = model.getLineCount()
+  if (targetCount === currentCount) return
 
-    if (newCount > currentCount) {
-      const newLines = []
-      for (let i = 0; i < newCount - currentCount; i++) {
-        newLines.push('')
-      }
-      model.setValue(model.getValue() + '\n' + newLines.join('\n'))
-    } else {
-      const lines = model.getValue().split('\n')
-      const newLines = lines.slice(0, newCount)
-      model.setValue(newLines.join('\n'))
-    }
-  },
-)
+  if (targetCount > currentCount) {
+    const lastLine = model.getLineCount()
+    const lastColumn = model.getLineMaxColumn(lastLine)
+    editor.executeEdits('line-sync', [
+      {
+        range: {
+          startLineNumber: lastLine,
+          startColumn: lastColumn,
+          endLineNumber: lastLine,
+          endColumn: lastColumn,
+        },
+        text: '\n'.repeat(targetCount - currentCount),
+        forceMoveMarkers: true,
+      },
+    ])
+  } else {
+    const lines = model.getLinesContent()
+    const newLines = lines.slice(0, targetCount)
+    editor.executeEdits('line-sync', [
+      {
+        range: {
+          startLineNumber: 1,
+          startColumn: 1,
+          endLineNumber: currentCount,
+          endColumn: model.getLineMaxColumn(currentCount),
+        },
+        text: newLines.join('\n'),
+        forceMoveMarkers: true,
+      },
+    ])
+  }
+}
 
-defineExpose({ editor })
+defineExpose({ syncToLineCount })
 </script>
 
 <template>
