@@ -12,6 +12,39 @@ function handleOriginalLineCount(count: number) {
 function handleTranslatedLineCount(count: number) {
   editorOriginal.value?.syncToLineCount(count)
 }
+
+function importFileTxt() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = '.txt'
+  input.onchange = async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    const text = await file.text()
+    editorOriginal.value?.setValue(text)
+    editorTranslated.value?.setValue('')
+  }
+  input.click()
+}
+
+function exportFileTxt() {
+  const origContent = editorOriginal.value?.getValue() ?? ''
+  const transContent = editorTranslated.value?.getValue() ?? ''
+  downloadTxt('original.txt', origContent)
+  downloadTxt('translated.txt', transContent)
+}
+
+function downloadTxt(filename: string, content: string) {
+  const blob = new Blob([content], { type: 'text/plain' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+defineExpose({ importFileTxt, exportFileTxt })
 </script>
 
 <template>

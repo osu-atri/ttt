@@ -27,6 +27,7 @@ onMounted(() => {
       theme: 'vs-dark',
       automaticLayout: true,
       minimap: { enabled: false },
+      fontSize: 20,
       ...props.options,
     })
 

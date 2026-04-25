@@ -7,5 +7,14 @@ export default {
       effect: 'Effect',
       produce: 'Produce',
     },
+    menu: {
+      translate: {
+        file: {
+          self: 'File',
+          import: 'Import',
+          export: 'Export',
+        }
+      }
+    },
   },
 }
