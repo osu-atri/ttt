@@ -83,7 +83,17 @@ function syncToLineCount(targetCount: number) {
   }
 }
 
-defineExpose({ syncToLineCount })
+defineExpose({ syncToLineCount, setValue, getValue })
+
+function setValue(text: string) {
+  if (!editor) return
+  editor.setValue(text)
+}
+
+function getValue(): string {
+  if (!editor) return ''
+  return editor.getValue()
+}
 </script>
 
 <template>
